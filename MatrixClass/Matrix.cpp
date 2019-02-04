@@ -5,14 +5,44 @@
 #include <fstream>
 #include "Matrix.hpp"
 using namespace std;
+
+//Default Constructor
 Matrix::Matrix()
 {
-	init(0, 0);
+	init(0, 0); //Initialize to null
 }
+
+//Parameterized Constructor
 Matrix::Matrix(unsigned short int row, unsigned short int column)
 {
-	init(row, column);
+	init(row, column); //Initialize object
 }
+
+//Copy Constructor
+Matrix::Matrix(const Matrix &m)
+{
+	init(m.row, m.column); //Allocating Memory
+	for (unsigned short int i = 0; i < row; i++)
+		for (unsigned short int j = 0; j < column; j++)
+			matrix[i][j] = m.matrix[i][j]; //Copying Elements
+}
+
+//Destructor
+Matrix::~Matrix()
+{
+	if (row > 0 || column > 0)
+	{
+		for (unsigned short int i = 0; i < row; i++)
+		{
+			delete[] matrix[i]; //Deleting Columns
+		}
+		delete[] matrix; //Deleting Rows
+		row = 0;
+		column = 0;
+	}
+}
+
+//Initialize and allocating memory to object
 void Matrix::init(unsigned short int row, unsigned short int column)
 {
 	this->row = row;
@@ -23,16 +53,21 @@ void Matrix::init(unsigned short int row, unsigned short int column)
 		this->matrix[i] = new double[column];
 	}
 }
+
+//Read matrix from console
 void Matrix::accept()
 {
 	for (int i = 0; i < this->row; i++)
 		for (int j = 0; j < this->column; j++)
 			cin >> matrix[i][j];
 }
+
+//Write matrix to console
 void Matrix::display()
 {
-	cout << "\nMatrix : \n";
+	//cout << "\nMatrix : \n";
 	//cout << "Rows : " << row << "\t Cols: " << column;
+	cout << endl;
 	for (int i = 0; i < this->row; i++)
 	{
 		for (int j = 0; j < this->column; j++)
@@ -43,7 +78,8 @@ void Matrix::display()
 	}
 }
 
-void Matrix::addition(Matrix &op1, Matrix &op2)
+//Addition of two matrices
+void Matrix::addition(const Matrix &op1, const Matrix &op2)
 {
 	if (op1.row != op2.row || op1.column != op2.column)
 	{
@@ -57,7 +93,8 @@ void Matrix::addition(Matrix &op1, Matrix &op2)
 			this->matrix[i][j] = op1.matrix[i][j] + op2.matrix[i][j];
 }
 
-void Matrix::substract(Matrix &op1, Matrix &op2)
+//Substration of two matrices
+void Matrix::substract(const Matrix &op1, const Matrix &op2)
 {
 	if (op1.row != op2.row || op1.column != op2.column)
 	{
@@ -69,7 +106,9 @@ void Matrix::substract(Matrix &op1, Matrix &op2)
 		for (int j = 0; j < op1.column; j++)
 			this->matrix[i][j] = op1.matrix[i][j] - op2.matrix[i][j];
 }
-void Matrix::multiply(Matrix &op1, Matrix &op2)
+
+//Multiplacation of two matrices
+void Matrix::multiply(const Matrix &op1, const Matrix &op2)
 {
 	if (op1.column != op2.row)
 	{
@@ -88,6 +127,7 @@ void Matrix::multiply(Matrix &op1, Matrix &op2)
 		}
 }
 
+//Read matrix from file
 bool Matrix::readFile(const std::string filename)
 {
 	ifstream file;
@@ -107,31 +147,24 @@ bool Matrix::readFile(const std::string filename)
 	}
 	return true;
 }
-Matrix::~Matrix()
-{
-	if (row > 0 || column > 0)
-	{
-		for (unsigned short int i = 0; i < row; i++)
-		{
-			delete[] matrix[i];
-		}
-		delete[] matrix;
-		row = 0;
-		column = 0;
-	}
-}
+
+//Scalar Multiplacation
 void Matrix::scalarMultiply(double k)
 {
 	for (unsigned short int i = 0; i < row; i++)
 		for (unsigned short int j = 0; j < column; j++)
 			this->matrix[i][j] *= k;
 }
+
+//Check Matrix is Square or not
 bool Matrix::isSquare()
 {
 	if (this->row == this->column)
 		return true;
 	return false;
 }
+
+//Check Matrix is Identity or not
 bool Matrix::isIdentity()
 {
 	if (!isSquare())
@@ -150,6 +183,8 @@ bool Matrix::isIdentity()
 			}
 	return true;
 }
+
+//Check Matrix is Symmetric or not
 bool Matrix::isSymmetric()
 {
 	if (!isSquare())
@@ -161,6 +196,7 @@ bool Matrix::isSymmetric()
 	return true;
 }
 
+//Check Matrix is Null or not
 bool Matrix::isNull()
 {
 	for (unsigned short int i = 0; i < row; i++)
@@ -169,6 +205,8 @@ bool Matrix::isNull()
 				return false;
 	return true;
 }
+
+//Check Matrix is Diagonal or not
 bool Matrix::isDiagonal()
 {
 	if (!isSquare())
@@ -182,6 +220,8 @@ bool Matrix::isDiagonal()
 			}
 	return true;
 }
+
+//Check Matrix is Diagonally Dominant or not
 bool Matrix::isDiagonallyDominant()
 {
 	double check = 0;
@@ -195,14 +235,32 @@ bool Matrix::isDiagonallyDominant()
 			{
 				if (this->matrix[i][j] < 0)
 				{
-					this->matrix[i][j] *= -1;
+					check -= this->matrix[i][j];
+				}
+				else
+				{
+					check += this->matrix[i][j];
 				}
 			}
-			check += this->matrix[i][j];
 		}
-		//	cout << "ME : " << check << endl;
 		if (this->matrix[i][i] < check)
 			return false;
 	}
 	return true;
+}
+
+Matrix Matrix::operator+(const Matrix &op2)
+{
+
+	if (row != op2.row || column != op2.column)
+	{
+		cerr
+			<< "Addition not possible..";
+		return Matrix();
+	}
+	Matrix result(row, column);
+	for (int i = 0; i < row; i++)
+		for (int j = 0; j < column; j++)
+			result.matrix[i][j] = matrix[i][j] + op2.matrix[i][j];
+	return result;
 }
