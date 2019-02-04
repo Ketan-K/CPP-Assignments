@@ -10,14 +10,14 @@ class Matrix
   public:
 	unsigned short int row, column;
 	double **matrix;
-	Matrix();
-	~Matrix();												   //Null Constructor
+	Matrix(); //Null Constructor
+	~Matrix();
 	Matrix(unsigned short int row, unsigned short int column); //Constructor to initialize matrix & allocate memory
 	void init(unsigned short int row, unsigned short int column);
-	void addition(Matrix &, Matrix &);  //Addition of two matrix
-	void substract(Matrix &, Matrix &); //Addition of two matrix
-	void multiply(Matrix &, Matrix &);  //Addition of two matrix
-	void scalarMultiply(double);		//Addition of two matrix
+	void addition(Matrix &, Matrix &); //Addition of two matrix
+	void substract(Matrix &, Matrix &);
+	void multiply(Matrix &, Matrix &);
+	void scalarMultiply(double);
 	bool isIdentity();
 	bool isSquare();
 	bool isSymmetric();
