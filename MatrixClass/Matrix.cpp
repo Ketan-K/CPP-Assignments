@@ -260,7 +260,122 @@ Matrix Matrix::operator+(const Matrix &op2)
 	}
 	Matrix result(row, column);
 	for (int i = 0; i < row; i++)
+	{
 		for (int j = 0; j < column; j++)
 			result.matrix[i][j] = matrix[i][j] + op2.matrix[i][j];
+	}
 	return result;
+}
+Matrix Matrix::operator-(const Matrix &op2)
+{
+
+	if (row != op2.row || column != op2.column)
+	{
+		cerr
+			<< "Substration not possible..";
+		return Matrix();
+	}
+	Matrix result(row, column);
+	for (int i = 0; i < row; i++)
+	{
+		for (int j = 0; j < column; j++)
+			result.matrix[i][j] = matrix[i][j] - op2.matrix[i][j];
+	}
+	return result;
+}
+Matrix Matrix::operator*(const Matrix &op2)
+{
+	if (column != op2.row)
+	{
+		cerr << "Multiplication not possible..";
+		return Matrix();
+	}
+	Matrix result(row, op2.column);
+	for (int i = 0; i < row; i++)
+		for (int j = 0; j < op2.column; j++)
+		{
+			result.matrix[i][j] = 0;
+			for (int k = 0; k < column; k++)
+			{
+				result.matrix[i][j] += matrix[i][k] * op2.matrix[k][j];
+			}
+		}
+	return result;
+}
+Matrix Matrix::transpose()
+{
+	int j;
+	Matrix result(column, row);
+	for (int i = 0; i < row; i++)
+	{
+		for (j = 0; j < column; j++)
+			result.matrix[j][i] = matrix[i][j];
+	}
+	return result;
+}
+void Matrix::operator=(const Matrix &m)
+{
+	init(m.row, m.column); //Allocating Memory
+	for (unsigned short int i = 0; i < row; i++)
+		for (unsigned short int j = 0; j < column; j++)
+			matrix[i][j] = m.matrix[i][j]; //Copying Elements
+}
+
+Matrix Matrix::makeAugmented(const Matrix &B)
+{
+	int i, j;
+	Matrix temp(row, column + 1);
+	for (i = 0; i < row; ++i)
+	{
+		for (j = 0; j < column; ++j)
+		{
+			temp.matrix[i][j] = this->matrix[i][j];
+		}
+		temp.matrix[i][j] = B.matrix[i][0];
+	}
+	return temp;
+}
+void Matrix::upperTriangular()
+{
+	for (int i = 0; i < column - 1; ++i)
+	{
+		double onefactor = matrix[i][i];
+		for (int j = 0; j < column; ++j)
+		{
+			matrix[i][j] /= onefactor;
+		}
+		for (int pivotrow = 0; pivotrow < row; ++pivotrow)
+		{
+			if (i == pivotrow)
+				continue;
+			double factor = matrix[pivotrow][i];
+			for (int k = i; k < column; ++k)
+				matrix[pivotrow][k] -= factor * matrix[i][k];
+		}
+	}
+	display();
+}
+Matrix Matrix::guassElimination(const Matrix &B)
+{
+	Matrix augmented;
+	augmented = makeAugmented(B);
+	augmented.display();
+	augmented.upperTriangular();
+	augmented.display();
+	return augmented;
+}
+
+double Matrix::trace()
+{
+	if (!isSquare())
+		return 0;
+	double res = 0;
+	for (int i = 0; i < row; ++i)
+		res += matrix[i][i];
+	return res;
+}
+
+bool Matrix::isOrthogonal()
+{
+	return isSquare() && ((*this) * (this->transpose())).isIdentity();
 }

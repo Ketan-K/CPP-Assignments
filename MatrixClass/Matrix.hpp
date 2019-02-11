@@ -30,13 +30,21 @@ class Matrix
 	bool isNull();				 //Check Matrix is Null not
 	bool isDiagonal();			 //Check Matrix is Diagonal or not
 	bool isDiagonallyDominant(); //Check Matrix is Diagonally Dominant or not
-
+	bool isOrthogonal();
 	void accept();  //Read matrix from console
 	void display(); //write matrix to console
 
 	bool readFile(const std::string filename); //Read matrix from file
 
 	Matrix operator+(const Matrix &);
+	Matrix operator-(const Matrix &);
+	Matrix operator*(const Matrix &);
+	void operator=(const Matrix &);
+	Matrix transpose();
+	double trace();
+	void upperTriangular();
+	Matrix makeAugmented(const Matrix &);
+	Matrix guassElimination(const Matrix &);
 };
 
 #endif //MATRIXCLASS_MATRIX_HPP
