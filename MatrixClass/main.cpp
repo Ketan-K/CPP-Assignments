@@ -8,7 +8,7 @@ int main()
 	Matrix B, A, C;
 	A.readFile("matA2.txt");
 	B.readFile(str);
-	//C = A.guassElimination(B);
+	C = A.guassElimination(B);
 	cout << "\nTrace : " << A.trace();
 	cout << "\nisOrthogonal : " << boolalpha << A.isOrthogonal();
 

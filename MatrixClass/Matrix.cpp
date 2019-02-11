@@ -324,15 +324,19 @@ void Matrix::operator=(const Matrix &m)
 Matrix Matrix::makeAugmented(const Matrix &B)
 {
 	int i, j;
-	Matrix temp(row, column + 1);
+	Matrix temp(row, column + B.column);
 	for (i = 0; i < row; ++i)
 	{
 		for (j = 0; j < column; ++j)
 		{
 			temp.matrix[i][j] = this->matrix[i][j];
 		}
-		temp.matrix[i][j] = B.matrix[i][0];
+		for (int k = 0; k < B.column; k++)
+		{
+			temp.matrix[i][j + k] = B.matrix[i][k];
+		}
 	}
+
 	return temp;
 }
 void Matrix::upperTriangular()
