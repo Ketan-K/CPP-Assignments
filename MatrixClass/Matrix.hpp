@@ -36,10 +36,12 @@ class Matrix
 
 	bool readFile(const std::string filename); //Read matrix from file
 
-	Matrix operator+(const Matrix &);
-	Matrix operator-(const Matrix &);
-	Matrix operator*(const Matrix &);
+	Matrix operator+(const Matrix &) const;
+	Matrix operator-(const Matrix &) const;
+	Matrix operator*(const Matrix &)const;
 	void operator=(const Matrix &);
+	bool operator==(const Matrix &) const;
+	double *&operator[](int);
 	Matrix transpose();
 	double trace();
 	void upperTriangular();

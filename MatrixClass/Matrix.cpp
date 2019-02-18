@@ -249,7 +249,7 @@ bool Matrix::isDiagonallyDominant()
 	return true;
 }
 
-Matrix Matrix::operator+(const Matrix &op2)
+Matrix Matrix::operator+(const Matrix &op2) const
 {
 
 	if (row != op2.row || column != op2.column)
@@ -266,7 +266,7 @@ Matrix Matrix::operator+(const Matrix &op2)
 	}
 	return result;
 }
-Matrix Matrix::operator-(const Matrix &op2)
+Matrix Matrix::operator-(const Matrix &op2) const
 {
 
 	if (row != op2.row || column != op2.column)
@@ -283,7 +283,7 @@ Matrix Matrix::operator-(const Matrix &op2)
 	}
 	return result;
 }
-Matrix Matrix::operator*(const Matrix &op2)
+Matrix Matrix::operator*(const Matrix &op2) const
 {
 	if (column != op2.row)
 	{
@@ -321,6 +321,21 @@ void Matrix::operator=(const Matrix &m)
 			matrix[i][j] = m.matrix[i][j]; //Copying Elements
 }
 
+bool Matrix::operator==(const Matrix &op2) const
+{
+	if (row != op2.row || column != op2.column)
+		return false;
+	for (int i = 0; i < row; ++i)
+		for (int j = 0; j < column; ++j)
+			if (matrix[i][j] != op2.matrix[i][j])
+				return false;
+	return true;
+}
+double *&Matrix::operator[](int i)
+{
+	return matrix[i];
+}
+
 Matrix Matrix::makeAugmented(const Matrix &B)
 {
 	int i, j;
@@ -341,14 +356,14 @@ Matrix Matrix::makeAugmented(const Matrix &B)
 }
 void Matrix::upperTriangular()
 {
-	for (int i = 0; i < column - 1; ++i)
+	for (int i = 0; i < row; ++i)
 	{
 		double onefactor = matrix[i][i];
 		for (int j = 0; j < column; ++j)
 		{
 			matrix[i][j] /= onefactor;
 		}
-		for (int pivotrow = 0; pivotrow < row; ++pivotrow)
+		for (int pivotrow = i + 1; pivotrow < row; ++pivotrow)
 		{
 			if (i == pivotrow)
 				continue;
@@ -357,7 +372,6 @@ void Matrix::upperTriangular()
 				matrix[pivotrow][k] -= factor * matrix[i][k];
 		}
 	}
-	display();
 }
 Matrix Matrix::guassElimination(const Matrix &B)
 {

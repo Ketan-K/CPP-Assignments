@@ -11,7 +11,10 @@ int main()
 	C = A.guassElimination(B);
 	cout << "\nTrace : " << A.trace();
 	cout << "\nisOrthogonal : " << boolalpha << A.isOrthogonal();
-
+	cout << "\nOverloading == : " << (A == A) << endl;
+	cout << "A[][] : " << A[2][3] << endl;
+	A[2][3] = 5;
+	A.display();
 	//C.display();
 	/*
 	cout << "\nisIdentity : " << boolalpha << A.isIdentity();
