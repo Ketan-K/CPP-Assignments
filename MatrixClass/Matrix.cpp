@@ -333,12 +333,16 @@ bool Matrix::operator==(const Matrix &op2) const
 }
 double *&Matrix::operator[](int i)
 {
-	return matrix[i];
+	if (i < row)
+		return matrix[i];
+	return matrix[0];
 }
 
 Matrix Matrix::makeAugmented(const Matrix &B)
 {
 	int i, j;
+	if (row != B.row)
+		return *this;
 	Matrix temp(row, column + B.column);
 	for (i = 0; i < row; ++i)
 	{
@@ -378,9 +382,11 @@ Matrix Matrix::guassElimination(const Matrix &B)
 	Matrix augmented;
 	augmented = makeAugmented(B);
 	augmented.display();
+	augmented.pivoting();
 	augmented.upperTriangular();
-	augmented.display();
-	return augmented;
+	Matrix result = augmented.backSubstitution();
+	//augmented.display();
+	return result;
 }
 
 double Matrix::trace()
@@ -396,4 +402,37 @@ double Matrix::trace()
 bool Matrix::isOrthogonal()
 {
 	return isSquare() && ((*this) * (this->transpose())).isIdentity();
+}
+
+Matrix Matrix::backSubstitution()
+{
+	Matrix result(row, 1);
+	for (int i = row - 1; i >= 0; --i)
+	{
+		result.matrix[i][0] = matrix[i][column - 1];
+		for (int j = i + 1; j < row; j++)
+		{
+			result.matrix[i][0] -= matrix[i][j];
+		}
+		result.matrix[i][0] /= matrix[i][i];
+	}
+	return result;
+}
+
+void Matrix::pivoting()
+{
+	for (int i = 0; i < row; i++) //Pivotisation(partial) to make the equations diagonally dominant
+		for (int k = i + 1; k < row; k++)
+			if (abs(matrix[i][i]) < abs(matrix[k][i]))
+				for (int j = 0; j <= column; j++)
+				{
+					double temp = matrix[i][j];
+					matrix[i][j] = matrix[k][j];
+					matrix[k][j] = temp;
+				}
+}
+
+Matrix Matrix::gaussJacobi(Matrix &B, double tolerance = 0.0001)
+{
+	Matrix result(row)
 }

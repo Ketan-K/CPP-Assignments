@@ -6,16 +6,22 @@ int main()
 {
 	string str = "matB.txt";
 	Matrix B, A, C;
-	A.readFile("matA2.txt");
+	A.readFile("matDD.txt");
 	B.readFile(str);
+	cout << "Before";
+	A.display();
+	A.pivoting();
+	cout << "After";
+	A.display();
 	C = A.guassElimination(B);
 	cout << "\nTrace : " << A.trace();
 	cout << "\nisOrthogonal : " << boolalpha << A.isOrthogonal();
 	cout << "\nOverloading == : " << (A == A) << endl;
-	cout << "A[][] : " << A[2][3] << endl;
+	cout << "A[][] : " << A[2][2] << endl;
 	A[2][3] = 5;
 	A.display();
-	//C.display();
+	cout << "Result";
+	C.display();
 	/*
 	cout << "\nisIdentity : " << boolalpha << A.isIdentity();
 	cout << "\nisSymmetric : " << A.isSymmetric();

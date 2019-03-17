@@ -45,8 +45,11 @@ class Matrix
 	Matrix transpose();
 	double trace();
 	void upperTriangular();
+	void pivoting();
 	Matrix makeAugmented(const Matrix &);
 	Matrix guassElimination(const Matrix &);
+	Matrix backSubstitution();
+	Matrix gaussJacobi(double tolerance = 0.0001)
 };
 
 #endif //MATRIXCLASS_MATRIX_HPP
